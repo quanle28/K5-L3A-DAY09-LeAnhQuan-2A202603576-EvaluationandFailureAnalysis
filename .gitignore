@@ -3,3 +3,13 @@ __pycache__/
 src/reports/
 src/traces/
 *.sqlite
+
+.venv/
+.day8-original/
+day8-source.zip
+.env
+.env.*
+src/eval/instructor/
+student_drop/
+.tmp/
+.pytest_cache/

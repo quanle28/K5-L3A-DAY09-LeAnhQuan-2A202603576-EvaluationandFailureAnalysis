@@ -16,38 +16,28 @@
 | M6 | sau 17:00 | **Advanced.** Nhiễu: A/A trên 2 bộ seed, `pass@k` / `pass^k`, ngưỡng `pass_hat_5` | `python -m lab9.mutation --aa 66,77,88,99,110 ...` |
 | M7 | sau 17:00 | **Expert.** Gate chống gian lận eval: `integrity_check` + ratchet; scorecard đột biến | `python -m lab9.traps` và `python -m lab9.mutation ...` |
 
-## Cài đặt (M0): chép overlay vào repo Lab 8
+## Cài đặt (M0): dùng bản fork Day 09
 
-Starter này **không chạy độc lập**: nó chỉ có `src/lab9/`, docs và workflow. Code agent, dữ liệu và `requirements.txt` nằm trong repo Lab 8 của nhóm.
+**Quy trình cập nhật theo thông báo giảng viên do người học cung cấp:** fork Day 09, đặt tên `K5-L3A-DAY09-HoVaTen-MSSV-EvaluationandFailureAnalysis`; chép `src/` nguyên bản Day 08 của giảng viên vào fork, giữ lại phần Day 09; làm trên `starter/d09`; mở PR sang `main` ngay trong fork; bật workflow tại tab Actions.
 
-**Không cần hoàn thiện Lab 8.** M0–M4 (baseline, gate, `fixed`, `seeded_regression`) đều chạy trên shape `swarm`, tức `lab8/shapes/swarm_reference.py` do giảng viên cung cấp, không dùng `workflow`/`single`/`orchestrator` của nhóm. Repo Lab 8 còn TODO vẫn làm được Lab 9, miễn là package `src/lab8/` còn nguyên.
+Không cần hoàn thành ba shape nhóm Day 08. Lab này chỉ đánh giá `swarm` mẫu. **Giữ nguyên toàn bộ `src/lab8/`**. Nguồn được xác minh tại commit Day 08 `034c6c421c198dae67a9211d15e2587d5a378972`, ghi trong `docs/evidence/day8_source.json`.
 
-**Lab 8 bị khóa, trace cố định.** Không sửa file nào trong `src/lab8/` (trừ 10 điểm). Trace không commit sẵn: `lab9.eval` chạy lại agent bằng MockLLM trên 14 item × 5 seed cố định, nên chạy lần nào cũng ra cùng một trace. Việc của bạn là eval và phân tích dựa trên trace đó: taxonomy, judge calibration, grader, bootstrap gate.
-
-```bash
-# 1. Ở thư mục chứa repo Lab 8 của nhóm (bản nào cũng được, kể cả chưa xong)
-git clone https://github.com/VinUni-AI20k/K5-Day9-Evaluation-and-Failure-Analysis lab9-starter
-cd <repo-lab8-cua-nhom>
+```powershell
+# Trong bản fork Day 09 đã clone:
 git switch -c starter/d09
-
-# 2. Chép đúng 3 thư mục. KHÔNG chép README/CHECKPOINTS/RUBRIC/SUBMISSION/.gitignore ở gốc:
-#    các file đó trùng tên với Lab 8; đọc chúng ngay trong lab9-starter.
-#    Chép nhầm .gitignore sẽ mất dòng chặn .env và src/eval/instructor/ của Lab 8.
-cp -R ../lab9-starter/src/. src/
-cp -R ../lab9-starter/docs/. docs/
-cp -R ../lab9-starter/.github/. .github/     # thêm eval-gate.yml, giữ ci.yml của Lab 8
-
-# 3. Cài và kiểm tra (Python ≥ 3.11). Với uv: `uv venv && source .venv/bin/activate` trước
+# Chép src/ từ repo gốc giảng viên Day 08 vào src/ ở đây,
+# giữ src/lab9 và các file Day 09 hiện có.
+py -3.13 -m venv .venv
+.venv/Scripts/python.exe -m pip install -r src/requirements.txt -r src/requirements-lab9.txt
 cd src
-uv pip install -r requirements.txt -r requirements-lab9.txt   # không dùng uv: python -m pip install ...
-python -m lab9.smoke
-python -m lab9.evalset --build          # sinh eval_set_v1.jsonl + labels_v1.json (nhãn TÁCH khỏi item)
-cd .. && git add -A && git commit -m "chore: add lab9 overlay"
+../.venv/Scripts/python.exe -m lab9.smoke
+../.venv/Scripts/python.exe -m lab9.evalset --build --check
+../.venv/Scripts/python.exe -m lab9.verify_submission
 ```
 
-Kiểm tra nhanh sau bước 2: `git status` chỉ hiện file **mới** trong `src/lab9/`, `src/tests/test_lab9_*`, `src/config/`, `src/data/eval/`, `docs/` và `.github/workflows/eval-gate.yml`. Nếu thấy file `src/lab8/` bị sửa, bạn đã chép nhầm: `git restore src/lab8`.
+Không chép bài nhóm, database, traces, report cũ hoặc `.env` của Day 08. Không sửa host, variant, trap hoặc bộ chấm để qua bài. File generated eval-set/report cần giữ LF để SHA ở Windows và CI giống nhau.
 
-**Baseline cho CI (M4).** Job `eval-gate` đọc `src/reports/baseline_v1.json` trên nhánh, nên file này phải được commit. Sinh từ `main` đã hoàn thành M1–M3 (`-f` để chắc chắn không bị `.gitignore` bỏ qua):
+**Baseline cho CI (M4).** Job `eval-gate` đọc `src/reports/baseline_v1.json` trên nhánh, nên file này phải được commit. Theo quy trình cập nhật, sinh trên `starter/d09` sau khi hoàn thành M1–M3 bằng agent mẫu gốc (`-f` để chắc chắn không bị `.gitignore` bỏ qua):
 ```bash
 cd src
 python -m lab9.eval --shape swarm --spec config/metric_spec.yaml --out reports/baseline_v1.json
