@@ -26,7 +26,7 @@ jobs:
     defaults: {run: {working-directory: src}}
     steps:
       - uses: actions/checkout@v7
-        with: {persist-credentials: false}
+        with: {persist-credentials: false, fetch-depth: 0}
       # setup-uv publishes only full tags (no @v10); pin the SHA.
       - uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with: {python-version: "3.13", activate-environment: true, enable-cache: true, cache-dependency-glob: "src/requirements*.txt"}
@@ -41,6 +41,13 @@ jobs:
           python -m lab9.gate --pr reports/eval_pr.json --baseline "$EVAL_BASELINE" --spec "$EVAL_SPEC"
       - name: Check the committed baseline and the M3 metric
         run: python -m lab9.ci_check --pr reports/eval_pr.json --baseline "$EVAL_BASELINE" --spec "$EVAL_SPEC"
+      - name: Enforce the metric ratchet against the PR base commit
+        if: github.event_name == 'pull_request'
+        env: {BASE_SHA: "${{ github.event.pull_request.base.sha }}"}
+        shell: bash
+        run: |
+          git show "$BASE_SHA:src/config/metric_spec.yaml" > "$RUNNER_TEMP/base-spec-v1.yaml"
+          python -m lab9.gate --pr reports/eval_pr.json --baseline "$EVAL_BASELINE" --spec "$EVAL_SPEC" --base-spec "$RUNNER_TEMP/base-spec-v1.yaml"
       - name: Verify the gate accepts fixed
         shell: bash
         run: |
@@ -69,7 +76,7 @@ jobs:
     defaults: {run: {working-directory: src}}
     steps:
       - uses: actions/checkout@v7
-        with: {persist-credentials: false}
+        with: {persist-credentials: false, fetch-depth: 0}
       - id: has
         run: "test -f reports/baseline_v2.json && echo v2=1 >> \"$GITHUB_OUTPUT\" || echo skip, no baseline_v2"
       - if: steps.has.outputs.v2
@@ -83,3 +90,16 @@ jobs:
         run: python -m lab9.evalset --v2
       - if: steps.has.outputs.v2
         run: python -m lab9.mutation --spec config/metric_spec_v2.yaml --baseline reports/baseline_v2.json
+      - name: Verify A/A and reject every public integrity trap
+        if: steps.has.outputs.v2
+        run: |
+          python -m lab9.mutation --spec config/metric_spec_v2.yaml --aa 66,77,88,99,110
+          python -m lab9.eval --shape slice_regression --spec config/metric_spec_v2.yaml --out reports/eval_slice_regression.json
+          python -m lab9.traps --pr reports/eval_slice_regression.json --baseline reports/baseline_v2.json --spec config/metric_spec_v2.yaml
+      - name: Enforce the v2 metric ratchet against the PR base commit
+        if: steps.has.outputs.v2 && github.event_name == 'pull_request'
+        env: {BASE_SHA: "${{ github.event.pull_request.base.sha }}"}
+        shell: bash
+        run: |
+          git show "$BASE_SHA:src/config/metric_spec_v2.yaml" > "$RUNNER_TEMP/base-spec-v2.yaml"
+          python -m lab9.gate --pr reports/baseline_v2.json --baseline reports/baseline_v2.json --spec config/metric_spec_v2.yaml --base-spec "$RUNNER_TEMP/base-spec-v2.yaml"

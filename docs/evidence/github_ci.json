@@ -1,0 +1,16 @@
+{
+  "repository": "quanle28/K5-L3A-DAY09-LeAnhQuan-2A202603576-EvaluationandFailureAnalysis",
+  "pr": 1,
+  "head": "starter/d09",
+  "base": "main",
+  "verified_commit": "d0a8b41755c3b6e205741d78870b32e74575e8a8",
+  "run_id": 44068447335,
+  "run_url": "https://github.com/quanle28/K5-L3A-DAY09-LeAnhQuan-2A202603576-EvaluationandFailureAnalysis/actions/runs/44068447335",
+  "actions_enabled": true,
+  "workflow_state": "active",
+  "jobs": {
+    "detect": "success",
+    "eval-gate": "success",
+    "eval-gate-v2": "success"
+  }
+}
