@@ -34,6 +34,7 @@ Giữ kiểm tra gốc eval-gate, eval-gate-v2; thêm ratchet đối chiếu spe
 - Đã commit/push nhánh starter/d09. Commit triển khai: cb6406f756d89c614405274117cd89e06ed1d45c.
 - Đã mở [PR #1: starter/d09 → main](https://github.com/quanle28/K5-L3A-DAY09-LeAnhQuan-2A202603576-EvaluationandFailureAnalysis/pull/1) trong chính fork quanle28, chưa merge.
 - API xác minh Actions enabled=true và workflow lab9-eval-gate active; workflow tự chạy khi mở/cập nhật PR.
+- Kết quả đã xác minh: **detect, eval-gate và eval-gate-v2 đều SUCCESS**, [run #2](https://github.com/quanle28/K5-L3A-DAY09-LeAnhQuan-2A202603576-EvaluationandFailureAnalysis/actions/runs/44068447335), commit d0a8b41755c3b6e205741d78870b32e74575e8a8. Commit bổ sung bằng chứng này chỉ đổi tài liệu; Checks tiếp tục kiểm commit mới nhất.
 - Kết quả từ xa xem [Checks của PR](https://github.com/quanle28/K5-L3A-DAY09-LeAnhQuan-2A202603576-EvaluationandFailureAnalysis/pull/1/checks) và [GitHub Actions](https://github.com/quanle28/K5-L3A-DAY09-LeAnhQuan-2A202603576-EvaluationandFailureAnalysis/actions). Ba job cần kiểm tra: detect, eval-gate, eval-gate-v2.
 - Nội dung PR có gate exit 1 của seeded_regression, mutation scorecard, A/A và 4 trap exit 1, lưu trong [PR_DESCRIPTION.md](docs/PR_DESCRIPTION.md).
 - Kết nối GitHub ban đầu lỗi và connector ghi bị 403; sau khi mạng phục hồi, Git/REST dùng phiên Git đăng nhập sẵn để hoàn thành thao tác, không xuất/lưu token. Không force push, không backdate và không tự merge.
