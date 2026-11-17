@@ -2,7 +2,7 @@
 
 Thực hiện trong fork cá nhân, nhánh starter/d09 → main. Import src/ từ commit gốc Day 08 034c6c421c198dae67a9211d15e2587d5a378972; 28 file lab8/ giữ nguyên. Hoàn thành M0–M7: taxonomy/provenance, calibration, code graders, paired bootstrap, slice gate, pass@k/pass^k, integrity/ratchet; bổ sung trace regression và tài liệu. Không sửa variants/traps/test gốc, không sửa tay reports.
 
-Kiểm tra cục bộ: 57 test mặc định + 38 test Day 09 PASS; 29/29 exit code đúng; detection 100%, false alarm 0%; mutation 3/3, 0 báo nhầm; 4/4 trap bị chặn. GitHub Actions cần bật và xác nhận run xanh sau khi push.
+Kiểm tra cục bộ: 57 test mặc định + 38 test Day 09 PASS; 29/29 exit code đúng; detection 100%, false alarm 0%; mutation 3/3, 0 báo nhầm; 4/4 trap bị chặn. Actions đã bật (workflow active); theo dõi eval-gate và eval-gate-v2 tại Checks của PR #1.
 
 Baseline v1: E-swarm-20261117-6320 / 6320183135cc; v2: E-swarm-20261117-bc2f / bc2f855ba0a6.
 

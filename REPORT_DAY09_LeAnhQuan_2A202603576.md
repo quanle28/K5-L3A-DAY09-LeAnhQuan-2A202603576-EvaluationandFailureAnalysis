@@ -29,17 +29,16 @@
 
 ## Thay đổi workflow và trạng thái GitHub
 
-Giữ kiểm tra gốc eval-gate, eval-gate-v2; thêm ratchet đối chiếu spec tại commit base của PR, A/A và chạy trap thật. Workflow YAML đã đọc và kiểm tra cục bộ các lệnh ratchet với spec HEAD/main; chưa có run GitHub để khẳng định dấu xanh.
+Giữ kiểm tra gốc eval-gate, eval-gate-v2; thêm ratchet đối chiếu spec tại commit base của PR, A/A và chạy trap thật. Đã kiểm tra các lệnh ratchet cục bộ với spec main; các job thực thi lại trên GitHub, không suy dấu xanh từ test cục bộ.
 
-Kết nối GitHub đã phục hồi sau lỗi mạng ban đầu. API GitHub xác nhận Actions enabled=true và workflow lab9-eval-gate active. Connector có lỗi quyền ghi 403 nên thao tác Git/REST dùng phiên Git đăng nhập sẵn; không xuất/lưu token. Nội dung PR ở [PR_DESCRIPTION.md](docs/PR_DESCRIPTION.md). Trạng thái PR và CI từ xa sẽ được bổ sung sau push, không suy dấu xanh từ test cục bộ.
+- Đã commit/push nhánh starter/d09. Commit triển khai: cb6406f756d89c614405274117cd89e06ed1d45c.
+- Đã mở [PR #1: starter/d09 → main](https://github.com/quanle28/K5-L3A-DAY09-LeAnhQuan-2A202603576-EvaluationandFailureAnalysis/pull/1) trong chính fork quanle28, chưa merge.
+- API xác minh Actions enabled=true và workflow lab9-eval-gate active; workflow tự chạy khi mở/cập nhật PR.
+- Kết quả từ xa xem [Checks của PR](https://github.com/quanle28/K5-L3A-DAY09-LeAnhQuan-2A202603576-EvaluationandFailureAnalysis/pull/1/checks) và [GitHub Actions](https://github.com/quanle28/K5-L3A-DAY09-LeAnhQuan-2A202603576-EvaluationandFailureAnalysis/actions). Ba job cần kiểm tra: detect, eval-gate, eval-gate-v2.
+- Nội dung PR có gate exit 1 của seeded_regression, mutation scorecard, A/A và 4 trap exit 1, lưu trong [PR_DESCRIPTION.md](docs/PR_DESCRIPTION.md).
+- Kết nối GitHub ban đầu lỗi và connector ghi bị 403; sau khi mạng phục hồi, Git/REST dùng phiên Git đăng nhập sẵn để hoàn thành thao tác, không xuất/lưu token. Không force push, không backdate và không tự merge.
 
-Sau khi khôi phục quyền/kết nối, thực hiện trên repo này:
-
-```powershell
-git push -u origin starter/d09
-```
-
-Vào Actions của fork → bấm “I understand my workflows, go ahead and enable them” nếu hiện. Mở PR với base repository là chính quanle28/...Day09..., base main, compare starter/d09; dán docs/PR_DESCRIPTION.md. Nếu PR đã mở trước khi bật Actions, chạy lab9-eval-gate bằng workflow_dispatch ở starter/d09. Chỉ coi nộp đủ khi eval-gate và eval-gate-v2 xanh; không tự merge. Không đổi thời gian commit hoặc force push.
+Một lỗi tương thích Windows được sửa ở generator: write_text mặc định tạo CRLF khiến SHA khác Linux. Eval-set và report nay sinh LF trực tiếp. Đã đối chiếu SHA **blob trong staging** với baseline và đối chiếu 28 blob lab8 với nguồn giảng viên trước commit; tất cả khớp.
 
 ## Giới hạn và sử dụng AI
 
